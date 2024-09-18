@@ -1,12 +1,14 @@
-import MenuItem from "./components/menuItem";
+import { useReducer } from "react";
+import MenuItem from "./components/MenuItem";
 import OrderContents from "./components/OrderContents";
 import OrderTotals from "./components/OrderTotals";
 import TipPorcentageForm from "./components/TipPorcentageForm";
 import { menuItems } from "./data/db"
-import useOrder from "./hook/useOrder";
+import { initialState, orderReducer } from "./reducer/order-reducer";
 
 function App() { 
-  const {order, tip, setTip, addItem, removeItem, placeOrder} = useOrder()
+
+  const [state, dispatch] = useReducer(orderReducer, initialState)
 
   return (
     <>
@@ -25,7 +27,7 @@ function App() {
                   item = {item}
 
                   // Funcion addItem
-                  addItem = {addItem}
+                  dispatch = {dispatch}
                 />
               ))}
             </div>
@@ -35,24 +37,24 @@ function App() {
               <h2>Consumo</h2>
               <div className="p-5 space-y-4 border border-dashed rounded-lg border-slate-300">
                 {
-                  order.length
+                  state.order.length
                   ? 
                   (
                     <>
                       <OrderContents 
-                        order={order}
-                        removeItem={removeItem}
+                        order={state.order}
+                        dispatch={dispatch}
                       />
 
                       <TipPorcentageForm 
-                        setTip={setTip}
-                        tip={tip}
+                        dispatch={dispatch}
+                        tip={state.tip}
                       />
 
                       <OrderTotals 
-                        order={order}
-                        tip={tip}
-                        placeOrder={placeOrder}
+                        order={state.order}
+                        tip={state.tip}
+                        dispatch={dispatch}
                       />
                     </>
                   )
